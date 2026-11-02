@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
+<meta name="description" content="Nishant — quantitative and systematic trader building a one-person desk. Systems over opinions." />
+<link rel="icon" href="data:," />
+<title>Nishant — Quantitative Trader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Theme: follows the reader's system setting ----------
+     Light = white background / dark text.
+     Dark  = black background / light text. */
+  :root{
+    color-scheme:light;
+    --bg:#ffffff;
+    --ink:#111111;
+    --ink-2:#2c2c2c;
+    --muted:#595959;
+    --line:#e6e6e6;
+    --accent:#0b5a34;
+    --accent-ink:#0b5a34;
+    --focus:#0b5a34;
+    --selection-bg:#d7ecdf;
+    --selection-ink:#111111;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      color-scheme:dark;
+      --bg:#000000;
+      --ink:#f5f5f5;
+      --ink-2:#dedede;
+      --muted:#a8a8a8;
+      --line:#2b2b2b;
+      --accent:#7ddba8;
+      --accent-ink:#8fe0b0;
+      --focus:#8fe0b0;
+      --selection-bg:#14402a;
+      --selection-ink:#f5f5f5;
+    }
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+    overflow-x:hidden;
+    overflow-x:clip;
+    background:var(--bg);
+  }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    min-height:100vh;
+    min-height:100svh;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    overflow-x:hidden;
+    overflow-x:clip;
+    overflow-wrap:break-word;
+  }
+  ::selection{background:var(--selection-bg);color:var(--selection-ink)}
+  img,svg,video{max-width:100%;height:auto}
+  a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  a:focus-visible{
+    outline:2px solid var(--focus);
+    outline-offset:3px;
+    border-radius:2px;
+  }
+
+  main{
+    flex:1 0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    width:100%;
+    min-width:0;
+    /* Safe-area aware padding for notched phones in both orientations */
+    padding-top:max(48px, env(safe-area-inset-top, 0px));
+    padding-bottom:max(48px, env(safe-area-inset-bottom, 0px));
+    padding-left:max(24px, env(safe-area-inset-left, 0px));
+    padding-right:max(24px, env(safe-area-inset-right, 0px));
+  }
+  .view{
+    /* margin-block:auto centres short pages without ever clipping the
+       top of tall pages (the classic justify-content:center bug). */
+    margin-block:auto;
+    max-width:560px;
+    width:100%;
+    min-width:0;
+    text-align:left;
+  }
+  .view[hidden]{display:none !important}
+  h1{
+    font-family:"Newsreader", Georgia, serif;
+    font-size:clamp(48px, 10vw, 88px);
+    line-height:.95;
+    letter-spacing:-0.03em;
+    font-weight:600;
+    margin:0 0 20px;
+    text-wrap:balance;
+    overflow-wrap:break-word;
+  }
+  h1:focus{outline:none}
+  .page-title{
+    font-size:clamp(40px, 8vw, 64px);
+    margin:0 0 8px;
+  }
+  .role{
+    font-size:clamp(19px, 3vw, 24px);
+    line-height:1.4;
+    color:var(--ink);
+    font-weight:500;
+    margin:0;
+    text-wrap:balance;
+  }
+  .desk{
+    font-size:clamp(16px, 2.4vw, 19px);
+    line-height:1.55;
+    color:var(--ink-2);
+    margin:10px 0 0;
+  }
+  .rule{
+    width:36px;
+    height:2px;
+    background:var(--accent);
+    margin:36px 0 20px;
+  }
+  .rule--page{margin:24px 0 20px}
+  .idea{
+    font-family:"Newsreader", Georgia, serif;
+    font-size:clamp(22px, 3.4vw, 28px);
+    line-height:1.3;
+    font-style:italic;
+    font-weight:500;
+    color:var(--accent-ink);
+    margin:0;
+  }
+  .sections{
+    margin-top:56px;
+    display:grid;
+    gap:0;
+  }
+  section{
+    border-top:1px solid var(--line);
+    padding:28px 0 30px;
+    min-width:0;
+  }
+  section:last-child{
+    padding-bottom:8px;
+  }
+  h2{
+    font-family:"Newsreader", Georgia, serif;
+    font-size:21px;
+    line-height:1.2;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0 0 14px;
+  }
+  section p{
+    font-size:16.5px;
+    line-height:1.65;
+    color:var(--ink-2);
+    margin:0;
+    max-width:52ch;
+  }
+  .strengths{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:10px;
+  }
+  .strengths li{
+    font-size:16.5px;
+    line-height:1.55;
+    color:var(--ink-2);
+    padding-left:18px;
+    position:relative;
+    min-width:0;
+  }
+  .strengths li::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:11px;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--accent);
+  }
+  .site-nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:2px 20px;
+    margin-bottom:32px;
+  }
+  .site-nav a{
+    display:inline-flex;
+    align-items:center;
+    min-height:44px;
+    padding-block:6px;
+    font-size:14.5px;
+    font-weight:500;
+    color:var(--muted);
+    text-decoration:none;
+  }
+  .site-nav a:hover,
+  .site-nav a[aria-current="page"]{
+    color:var(--accent-ink);
+  }
+  .site-nav a[aria-current="page"]{
+    text-decoration:underline;
+    text-underline-offset:4px;
+  }
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    min-height:44px;
+    padding-block:6px;
+    font-size:14.5px;
+    font-weight:500;
+    color:var(--muted);
+    text-decoration:none;
+    margin-bottom:32px;
+  }
+  .back-link:hover{color:var(--accent-ink)}
+  .placeholder{
+    font-size:17px;
+    line-height:1.65;
+    color:var(--ink-2);
+    margin:0;
+    max-width:52ch;
+  }
+  .quote-line{
+    font-family:"Newsreader", Georgia, serif;
+    font-size:clamp(24px, 4vw, 32px);
+    line-height:1.3;
+    font-style:italic;
+    font-weight:500;
+    color:var(--accent-ink);
+    margin:0 0 16px;
+    margin-inline:0;
+    padding:0;
+  }
+  .page-nav{
+    margin-top:56px;
+    border-top:1px solid var(--line);
+    padding-top:16px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:2px 20px;
+  }
+  .page-nav a{
+    display:inline-flex;
+    align-items:center;
+    min-height:44px;
+    padding-block:6px;
+    font-size:14.5px;
+    font-weight:500;
+    color:var(--muted);
+    text-decoration:none;
+  }
+  .page-nav a:hover{color:var(--accent-ink)}
+  .explore{
+    margin-top:48px;
+    border-top:1px solid var(--line);
+    padding-top:24px;
+  }
+  .explore-label{
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 14px;
+  }
+  .explore-links{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:0;
+  }
+  .explore-links li{
+    border-top:1px solid var(--line);
+    min-width:0;
+  }
+  .explore-links li:first-child{border-top:none}
+  .explore-links a{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    min-height:48px;
+    padding:13px 0;
+    text-decoration:none;
+    color:var(--ink);
+    min-width:0;
+  }
+  .explore-links a:hover .explore-name{color:var(--accent-ink)}
+  .explore-name{
+    font-family:"Newsreader", Georgia, serif;
+    font-size:19px;
+    font-weight:600;
+    min-width:0;
+    overflow-wrap:break-word;
+  }
+  .explore-arrow{
+    color:var(--muted);
+    font-size:16px;
+    flex:0 0 auto;
+  }
+  .contact a{
+    color:var(--accent-ink);
+    font-weight:500;
+    text-decoration:none;
+    border-bottom:1px solid var(--accent);
+    padding-bottom:1px;
+    overflow-wrap:anywhere;
+  }
+  .contact a:hover{opacity:.85}
+  .substack-link{
+    color:var(--accent-ink);
+    font-weight:500;
+    text-decoration:none;
+    border-bottom:1px solid var(--accent);
+    padding-bottom:1px;
+    overflow-wrap:anywhere;
+  }
+  .substack-link:hover{opacity:.85}
+  .contact p + p{margin-top:8px}
+  footer{
+    flex:0 0 auto;
+    padding-top:20px;
+    padding-bottom:max(28px, env(safe-area-inset-bottom, 0px));
+    padding-left:max(24px, env(safe-area-inset-left, 0px));
+    padding-right:max(24px, env(safe-area-inset-right, 0px));
+    text-align:center;
+  }
+  footer p{
+    margin:0;
+    font-size:13px;
+    color:var(--muted);
+  }
+
+  /* ---------- Small phones (portrait) ---------- */
+  @media (max-width:480px){
+    main{
+      padding-top:max(36px, env(safe-area-inset-top, 0px));
+      padding-bottom:max(36px, env(safe-area-inset-bottom, 0px));
+      padding-left:max(20px, env(safe-area-inset-left, 0px));
+      padding-right:max(20px, env(safe-area-inset-right, 0px));
+    }
+    .site-nav{margin-bottom:24px;gap:2px 18px}
+    .back-link{margin-bottom:24px}
+    .rule{margin:28px 0 18px}
+    .sections{margin-top:40px}
+    section{padding:24px 0 26px}
+    .page-nav{margin-top:40px}
+    .explore{margin-top:40px}
+  }
+  /* Very narrow phones / folded devices */
+  @media (max-width:340px){
+    main{
+      padding-left:max(16px, env(safe-area-inset-left, 0px));
+      padding-right:max(16px, env(safe-area-inset-right, 0px));
+    }
+    h1{font-size:42px}
+    .page-title{font-size:36px}
+    section p,.strengths li{font-size:16px}
+  }
+
+  /* ---------- Tablets (iPad portrait & landscape) ---------- */
+  @media (min-width:768px){
+    .view{max-width:600px}
+    main{
+      padding-top:max(64px, env(safe-area-inset-top, 0px));
+      padding-bottom:max(64px, env(safe-area-inset-bottom, 0px));
+      padding-left:max(32px, env(safe-area-inset-left, 0px));
+      padding-right:max(32px, env(safe-area-inset-right, 0px));
+    }
+  }
+  /* ---------- Large desktops ---------- */
+  @media (min-width:1280px){
+    .view{max-width:620px}
+  }
+
+  /* ---------- Short landscape viewports (phones / tablets on their side) ----------
+     Compact the vertical rhythm so nothing is clipped or pushed off-screen. */
+  @media (orientation:landscape) and (max-height:540px){
+    main{
+      padding-top:max(24px, env(safe-area-inset-top, 0px));
+      padding-bottom:max(24px, env(safe-area-inset-bottom, 0px));
+    }
+    .view{margin-block:0}
+    h1{font-size:clamp(40px, 9vh, 56px);margin-bottom:12px}
+    .page-title{font-size:clamp(34px, 8vh, 48px)}
+    .site-nav{margin-bottom:16px}
+    .back-link{margin-bottom:16px}
+    .rule{margin:20px 0 14px}
+    .rule--page{margin:16px 0 14px}
+    .sections{margin-top:28px}
+    section{padding:20px 0 22px}
+    .page-nav{margin-top:28px}
+    .explore{margin-top:28px}
+    footer{padding-top:12px;padding-bottom:max(16px, env(safe-area-inset-bottom, 0px))}
+  }
+
+  /* ---------- Motion & contrast preferences ---------- */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:.01ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.01ms !important;
+      scroll-behavior:auto !important;
+    }
+  }
+  @media (forced-colors: active){
+    .rule,.strengths li::before{background:CanvasText}
+    .contact a,.substack-link{border-bottom-color:CanvasText}
+  }
+  @media print{
+    :root{--bg:#ffffff;--ink:#000000;--ink-2:#222222;--muted:#444444;--line:#cccccc;--accent:#000000;--accent-ink:#000000}
+    body{background:#ffffff;color:#000000}
+  }
+
+  .quote-intro{
+    font-size:16.5px;
+    line-height:1.65;
+    color:var(--muted);
+    margin:0 0 32px;
+    max-width:52ch;
+  }
+  .quote-theme{
+    border-top:1px solid var(--line);
+    padding:28px 0 8px;
+  }
+  .quote-theme h2{
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 24px;
+  }
+  .quote-count{
+    color:var(--accent-ink);
+    margin-left:6px;
+  }
+  .quote-card{
+    margin:0 0 32px;
+    padding-left:20px;
+    border-left:3px solid var(--accent);
+  }
+  .quote-card blockquote{
+    font-family:"Newsreader", Georgia, serif;
+    font-size:clamp(23px, 3.6vw, 29px);
+    line-height:1.35;
+    font-style:italic;
+    font-weight:500;
+    color:var(--ink);
+    margin:0 0 10px;
+    padding:0;
+  }
+  .quote-card figcaption{
+    font-size:14.5px;
+    line-height:1.5;
+    color:var(--muted);
+  }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Nishant","jobTitle":"Quantitative Trader","url":"https://nishant.trade"}
+</script>
+</head>
+<body>
+<main id="main">
+
+  <!-- ============ HOME / LANDING ============ -->
+  <div class="view" id="view-home" data-view="home">
+    <nav class="site-nav" aria-label="Site">
+      <a href="#background" data-home-anchor="background-heading">Background</a>
+      <a href="#strengths" data-home-anchor="strengths-heading">Strengths</a>
+      <a href="#blog">Blog</a>
+      <a href="#learnings">Learnings</a>
+      <a href="#quotes">Quotes</a>
+      <a href="#trading-books">Trading Books</a>
+      <a href="#contact" data-home-anchor="contact-heading">Contact</a>
+    </nav>
+
+    <h1 id="home-title" tabindex="-1">Nishant</h1>
+    <p class="role">AI-enabled quantitative / systematic trader</p>
+    <p class="desk">Building an AI-enabled one-person desk.</p>
+    <div class="rule" aria-hidden="true"></div>
+    <p class="idea">Systems over opinions.</p>
+
+    <div class="sections">
+      <section aria-labelledby="background-heading">
+        <h2 id="background-heading">Background</h2>
+        <p>Quantitative and systematic trader with broad experience across equities, forex / CFDs, and crypto markets, and a focus on futures, now building a one-person desk around independent, non-correlated strategies.</p>
+      </section>
+
+      <section aria-labelledby="strengths-heading">
+        <h2 id="strengths-heading">Strengths</h2>
+        <ul class="strengths">
+          <li>Systems thinking — complex problems broken into parts that work together</li>
+          <li>Explicit models and measurable outcomes</li>
+          <li>Risk-aware and operationally disciplined</li>
+          <li>Ideas tested against reality, not taken on presentation alone</li>
+        </ul>
+      </section>
+
+      <section class="contact" aria-labelledby="contact-heading">
+        <h2 id="contact-heading">Contact</h2>
+        <p><a href="mailto:contact@nishant.trade">contact@nishant.trade</a></p>
+        <p>Twitter / X: <a href="https://x.com/nishantpatel9" target="_blank" rel="noopener noreferrer">@nishantpatel9</a></p>
+      </section>
+    </div>
+
+    <nav class="explore" aria-label="More pages">
+      <p class="explore-label">More</p>
+      <ul class="explore-links">
+        <li><a href="#blog"><span class="explore-name">Blog</span><span class="explore-arrow" aria-hidden="true">→</span></a></li>
+        <li><a href="#learnings"><span class="explore-name">Learnings</span><span class="explore-arrow" aria-hidden="true">→</span></a></li>
+        <li><a href="#quotes"><span class="explore-name">Quotes</span><span class="explore-arrow" aria-hidden="true">→</span></a></li>
+        <li><a href="#trading-books"><span class="explore-name">Trading Books</span><span class="explore-arrow" aria-hidden="true">→</span></a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- ============ BLOG ============ -->
+  <div class="view" id="view-blog" data-view="blog" hidden>
+    <a class="back-link" href="#home">← Home</a>
+    <h1 class="page-title" id="blog-title" tabindex="-1">Blog</h1>
+    <div class="rule rule--page" aria-hidden="true"></div>
+    <p class="placeholder"><a class="substack-link" href="https://tradingreinforced.substack.com/" target="_blank" rel="noopener noreferrer">Trading Reinforced</a></p>
+    <nav class="page-nav" aria-label="More pages">
+      <a href="#home">Home</a>
+      <a href="#learnings">Learnings</a>
+      <a href="#quotes">Quotes</a>
+      <a href="#trading-books">Trading Books</a>
+    </nav>
+  </div>
+
+  <!-- ============ LEARNINGS ============ -->
+  <div class="view" id="view-learnings" data-view="learnings" hidden>
+    <a class="back-link" href="#home">← Home</a>
+    <h1 class="page-title" id="learnings-title" tabindex="-1">Learnings</h1>
+    <div class="rule rule--page" aria-hidden="true"></div>
+    <p class="placeholder">Learning notes will appear here.</p>
+    <nav class="page-nav" aria-label="More pages">
+      <a href="#home">Home</a>
+      <a href="#blog">Blog</a>
+      <a href="#quotes">Quotes</a>
+      <a href="#trading-books">Trading Books</a>
+    </nav>
+  </div>
+
+  <!-- ============ QUOTES ============ -->
+  <div class="view" id="view-quotes" data-view="quotes" hidden>
+    <a class="back-link" href="#home">← Home</a>
+    <h1 class="page-title" id="quotes-title" tabindex="-1">Quotes</h1>
+    <div class="rule rule--page" aria-hidden="true"></div>
+    <blockquote class="quote-line">Systems over opinions.</blockquote>
+    <p class="quote-intro">28 quotes, kept for impact. One per point — duplicates, fragments, and weak versions are out.</p><section class="quote-theme" aria-labelledby="qt-psychology"><h2 id="qt-psychology">psychology <span class="quote-count">6</span></h2><figure class="quote-card"><blockquote>“Big egos in the market lead to big losses.”</blockquote><figcaption>— David Ryan, Momentum Masters: A Roundtable Interview with Super Traders, ed. Mark Minervini, p. 123</figcaption></figure><figure class="quote-card"><blockquote>“The market does not beat them. They beat themselves, because though they have brains they cannot sit tight.”</blockquote><figcaption>— Edwin Lefevre, Reminiscences of a Stock Operator, p. 55</figcaption></figure><figure class="quote-card"><blockquote>“I became a winning trader when I was able to say, &quot;To hell with my ego, making money is more important.&quot;”</blockquote><figcaption>— Marty Schwartz, The Market Wizards (interview by Jack D. Schwager), p. 134</figcaption></figure><figure class="quote-card"><blockquote>“The market does not care what you think, hope or want. Stay neutral and follow price. Trade what you see. Let your eyes do the work.”</blockquote><figcaption>— @SunriseTrader</figcaption></figure><figure class="quote-card"><blockquote>“We must embrace uncertainty, understanding that it is what creates opportunity in the market.”</blockquote><figcaption>— Gil Morales &amp; Chris Kacher, In the Trading Cockpit with the O&#x27;Neil Disciples, p. 35</figcaption></figure><figure class="quote-card"><blockquote>“The unsuccessful investor is best friends with hope, and hope skips along life’s path hand in hand with greed when it comes to the stock market.”</blockquote><figcaption>— Jesse Livermore, in Richard Smitten, World’s Greatest Stock Trader, p. 142</figcaption></figure></section><section class="quote-theme" aria-labelledby="qt-market-regime"><h2 id="qt-market-regime">market-regime <span class="quote-count">5</span></h2><figure class="quote-card"><blockquote>“Follow the leaders.”</blockquote><figcaption>— Mark Minervini, Trade Like a Stock Market Wizard, p. 161</figcaption></figure><figure class="quote-card"><blockquote>“Once a stock drops under its 200-day moving average, all bets are off.”</blockquote><figcaption>— Larry Connors &amp; Cesar Alvarez, Short Term Trading Strategies That Work, p. 24</figcaption></figure><figure class="quote-card"><blockquote>“Sector rotation is the lifeblood of a bull market. I learned this lesson a long time ago and it has served me well. I would encourage you to remember this one. Most people will not.”</blockquote><figcaption>— @JC_ParetsX</figcaption></figure><figure class="quote-card"><blockquote>“It’s not the news. It’s the REACTION to the news that counts. And it’s not necessarily the first reaction.”</blockquote><figcaption>— @PatrickWalker56</figcaption></figure><figure class="quote-card"><blockquote>“It’s better to be buying stocks in a longer term uptrend than in a longer term downtrend.”</blockquote><figcaption>— Larry Connors &amp; Cesar Alvarez, Short Term Trading Strategies That Work, p. 24</figcaption></figure></section><section class="quote-theme" aria-labelledby="qt-risk"><h2 id="qt-risk">risk <span class="quote-count">4</span></h2><figure class="quote-card"><blockquote>“I never buy more of a stock that is showing me a big loss.”</blockquote><figcaption>— Mark Minervini, Momentum Masters: A Roundtable Interview with Super Traders, p. 116</figcaption></figure><figure class="quote-card"><blockquote>“The purpose of a stop loss isn&#x27;t to prevent losing; it&#x27;s to prevent being wrong from becoming too expensive.”</blockquote><figcaption>— @SJosephBurns</figcaption></figure><figure class="quote-card"><blockquote>“Most traders don’t blow up from one bad trade — they bleed out from inconsistency.”</blockquote><figcaption>— docmcgraw.substack</figcaption></figure><figure class="quote-card"><blockquote>“Position sizing is the most important part of any system because it is through position sizing that you will meet your objectives or meet ruin.”</blockquote><figcaption>— Van K. Tharp, Trade Your Way to Financial Freedom, p. 108</figcaption></figure></section><section class="quote-theme" aria-labelledby="qt-process"><h2 id="qt-process">process <span class="quote-count">3</span></h2><figure class="quote-card"><blockquote>“Applying conventional wisdom produces conventional returns, not superperformance.”</blockquote><figcaption>— Mark Minervini, Trade Like a Stock Market Wizard, p. 23</figcaption></figure><figure class="quote-card"><blockquote>“The better the trade, the less screen time is needed. The worse the trade, the more screen time you end up spending to watch it.”</blockquote><figcaption>— @SJosephBurns</figcaption></figure><figure class="quote-card"><blockquote>“The edge is not in being right every time, it’s in executing the same process over and over without needing immediate validation.”</blockquote><figcaption>— Alex (primetrading.substack)</figcaption></figure></section><section class="quote-theme" aria-labelledby="qt-entries"><h2 id="qt-entries">entries <span class="quote-count">3</span></h2><figure class="quote-card"><blockquote>“I never want to try to be the first one to the party in a stock trade.”</blockquote><figcaption>— Mark Minervini, Momentum Masters: A Roundtable Interview with Super Traders, p. 52</figcaption></figure><figure class="quote-card"><blockquote>“Stocks are never too high to buy or too low to sell.”</blockquote><figcaption>— Edwin Lefevre, Reminiscences of a Stock Operator, p. 102</figcaption></figure><figure class="quote-card"><blockquote>“It is impossible to short THE TOP or buy THE BOTTOM.”</blockquote><figcaption>— pristinecapital</figcaption></figure></section><section class="quote-theme" aria-labelledby="qt-discipline"><h2 id="qt-discipline">discipline <span class="quote-count">2</span></h2><figure class="quote-card"><blockquote>“You don’t have to involve yourself in every market movement. In fact, you should not attempt to.”</blockquote><figcaption>— Mark Minervini, Trade Like a Stock Market Wizard, p. 288</figcaption></figure><figure class="quote-card"><blockquote>“Don’t anticipate! Wait until the market gives you the clues, the signals, the hints, before you move.”</blockquote><figcaption>— Richard Smitten, Jesse Livermore: World&#x27;s Greatest Stock Trader, p. 310</figcaption></figure></section><section class="quote-theme" aria-labelledby="qt-exits"><h2 id="qt-exits">exits <span class="quote-count">2</span></h2><figure class="quote-card"><blockquote>“The elements of good trading are: (1) cutting losses, (2) cutting losses, and (3) cutting losses. If you can follow these three rules, you may have a chance.”</blockquote><figcaption>— Ed Seykota, The Market Wizards (interview by Jack D. Schwager), p. 80</figcaption></figure><figure class="quote-card"><blockquote>“If you acquire the skill of being able to let your winners run, all your small losses and occasional mistakes will be taken care of, and your account will grow quite rapidly.”</blockquote><figcaption>— @TmarketL</figcaption></figure></section><section class="quote-theme" aria-labelledby="qt-expectancy"><h2 id="qt-expectancy">expectancy <span class="quote-count">2</span></h2><figure class="quote-card"><blockquote>“The amateurs in most fields ask for forecasts, while professionals simply manage information and make decisions based on probabilities.”</blockquote><figcaption>— Alexander Elder, The New Trading for a Living, p. 62</figcaption></figure><figure class="quote-card"><blockquote>“No free lunch in the market. Every dollar of profit is paid for with risk management, screen time, emotional control, or a drawdown you had to sit through. If it looks easy, you&#x27;re the liquidity.”</blockquote><figcaption>— @1ChartMaster</figcaption></figure></section><section class="quote-theme" aria-labelledby="qt-trend"><h2 id="qt-trend">trend <span class="quote-count">1</span></h2><figure class="quote-card"><blockquote>“Traders say: “The trend is your friend,” and “Let your profits run.” They also say: “Buy low, sell high.” But why sell if the trend is up? And how high is high?”</blockquote><figcaption>— Alexander Elder, The New Trading for a Living, p. 170</figcaption></figure></section>
+    <nav class="page-nav" aria-label="More pages">
+      <a href="#home">Home</a>
+      <a href="#blog">Blog</a>
+      <a href="#learnings">Learnings</a>
+      <a href="#trading-books">Trading Books</a>
+    </nav>
+  </div>
+
+  <!-- ============ TRADING BOOKS ============ -->
+  <div class="view" id="view-trading-books" data-view="trading-books" hidden>
+    <a class="back-link" href="#home">← Home</a>
+    <h1 class="page-title" id="trading-books-title" tabindex="-1">Trading Books</h1>
+    <div class="rule rule--page" aria-hidden="true"></div>
+        <h2>Must-read (24)</h2>
+    <h2>trading (23)</h2>
+    <ul class="strengths">
+      <li>Secrets for Profiting in Bull and Bear Markets — Stan Weinstein (score 7.5)</li>
+      <li>Trade Like a Stock Market Wizard — Mark Minervini (score 7.29) — library match (unverified)</li>
+      <li>Market Wizards — Jack Schwager (score 7.15) — library match (unverified)</li>
+      <li>How to Make Money in Stocks — William O&#x27;Neil (score 6.82)</li>
+      <li>Reminiscences of a Stock Operator — Edwin Lefevre (score 6.5) — library match (unverified)</li>
+      <li>Trading in the Zone — Mark Douglas (score 6.47) — library match (unverified)</li>
+      <li>How to Trade in Stocks — Jesse Livermore (score 6.07) — library match (unverified)</li>
+      <li>Momentum Masters — Mark Minervini (score 5.89) — library match (unverified)</li>
+      <li>Think and Trade like a Champion — Mark Minervini (score 5.85) — library match (unverified)</li>
+      <li>The Disciplined Trader — Mark Douglas (score 5.74) — library match (unverified)</li>
+      <li>Trade Your Way to Financial Freedom — Van Tharp (score 5.74) — library match (unverified)</li>
+      <li>How I Made $2,000,000 in the Stock Market — Nicolas Darvas (score 5.7) — owned conflict (unverified)</li>
+      <li>The Mental Game of Trading — Jared Tendler (score 5.62)</li>
+      <li>Technical Analysis Using Multiple Timeframes — Brian Shannon (score 5.6)</li>
+      <li>Pit Bull: Lessons from Wall Street’s Champion Day Trader — Martin Schwartz (score 5.54) — library match (unverified)</li>
+      <li>Hedge Fund Market Wizards — Jack Schwager (score 5.47) — library match (unverified)</li>
+      <li>The Lifecycle Trade — Eve Boboch, Kathy Donnely Eric Krull and Kurt Daill (score 5.47)</li>
+      <li>One Good Trade — Mike Bellafiore (score 5.36) — library match (unverified)</li>
+      <li>Victory in Stock Trading — Oliver Kell (score 5.3)</li>
+      <li>Thinking in Bets — Annie Duke (score 5.17) — library match (unverified)</li>
+      <li>Super Trader — Van Tharp (score 5.03) — library match (unverified)</li>
+      <li>The New Market Wizards — Jack Schwager (score 5.03) — library match (unverified)</li>
+      <li>Unknown Market Wizards — Jack D. Schwager (score 5.03)</li>
+    </ul>
+    <h2>trading-adjacent (1)</h2>
+    <ul class="strengths">
+      <li>Thinking, Fast and Slow — Daniel Kahneman (score 5.65) — library match (unverified)</li>
+    </ul>
+    <h2>Strong (24)</h2>
+    <h2>trading (16)</h2>
+    <ul class="strengths">
+      <li>Trend Following — Michael Covel (score 4.9) — library match (unverified)</li>
+      <li>The Psychology of Money — Morgan Housel (score 4.65)</li>
+      <li>The Rule — Larry Hite (score 4.65)</li>
+      <li>The Perfect Speculator — Brad Koteshwar (score 4.55)</li>
+      <li>Lessons from the Greatest Stock Traders of All Time — John Boik (score 4.44) — library match (unverified)</li>
+      <li>Maximum Trading Gains with Anchored VWAP — Brian Shannon (score 4.39)</li>
+      <li>How Legendary Traders Made Millions — John Boik (score 4.3) — library match (unverified)</li>
+      <li>Monster Stocks — John Boik (score 4.3)</li>
+      <li>Studies in Tape Reading — Richard Demille Wyckoff (score 4.1)</li>
+      <li>Systematic Trading — Robert Carver (score 4.04) — library match (unverified)</li>
+      <li>Mastering the Mental Game of Trading — Steven Goldstein (score 3.97)</li>
+      <li>The Perfect Stock — Brad Koteshwar (score 3.69)</li>
+      <li>Trade the Trader — Quint Tatro (score 3.69) — library match (unverified)</li>
+      <li>Extreme Ownership — Jocko Willink (score 3.55)</li>
+      <li>Getting Started in Technical Analysis — Jack Schwager (score 3.55) — library match (unverified)</li>
+      <li>In the Trading Cockpit with the O&#x27;Neil Disciples — Gil Morales and Chris Kacher (score 3.55) — library match (unverified)</li>
+    </ul>
+    <h2>trading-adjacent (1)</h2>
+    <ul class="strengths">
+      <li>Atomic Habits — James Clear (score 4.85)</li>
+    </ul>
+    <h2>unclassified (7)</h2>
+    <ul class="strengths">
+      <li>Best Loser Wins — Tom Hougaard (score 4.9)</li>
+      <li>Antifragile — Nassim Taleb (score 4.47) — library match (unverified)</li>
+      <li>Fooled by Randomness — Nassim Nicholas Taleb (score 4.39) — library match (unverified)</li>
+      <li>The Art of War — Sun Tzu (score 3.9)</li>
+      <li>Ikigai — unnamed in post (score 3.69)</li>
+      <li>How to Listen When Markets Speak — Lawrence McDonald (score 3.55)</li>
+      <li>The Man Who Solved the Market — Gregory Zuckerman (score 3.55) — library match (unverified)</li>
+    </ul>
+    <h2>Optional (36)</h2>
+    <h2>trading (29)</h2>
+    <ul class="strengths">
+      <li>Advances in Machine Learning for Trading —  (score 3.35) — library match (unverified)</li>
+      <li>Algorithmic Trading — Ernest P. Chan (score 3.35) — library match (unverified)</li>
+      <li>Automated Stock Trading Systems — Laurens Bensdorp (score 3.35)</li>
+      <li>Building Winning Algorithmic Trading Systems: A Trader&#x27;s Journey From Data Mining to Monte Carlo Simulation to Live Trading —  (score 3.35) — library match (unverified)</li>
+      <li>Detecting Regime Change in Computational Finance: Data Science, Machine Learning and Algorithmic Trading —  (score 3.35)</li>
+      <li>Finding Alphas: A Quantitative Approach to Building Trading Strategies —  (score 3.35)</li>
+      <li>High Probability Trading — Marcel Link (score 3.35) — library match (unverified)</li>
+      <li>Machine Trading — Ernest P. Chan (score 3.35) — library match (unverified)</li>
+      <li>Option Volatility and Pricing — Natenberg (score 3.35) — library match (unverified)</li>
+      <li>Quantitative Momentum — Wesley R. Gray &amp; Jack R. Vogel (score 3.35) — library match (unverified)</li>
+      <li>Quantitative Portfolio Management — Michael Isichenko (score 3.35)</li>
+      <li>Quantitative Trading — Ernest P. Chan (score 3.35) — library match (unverified)</li>
+      <li>The Complete Turtle Trader — Michael W. Covel (score 3.35) — library match (unverified)</li>
+      <li>The PlayBook: An Inside Look at How to Think Like a Professional Trader — Mike Bellafiore (score 3.35) — library match (unverified)</li>
+      <li>The Trader’s Handbook — Richard Moglen, Ameet Rai, Nick Schmidt, Ross Haber (score 3.35)</li>
+      <li>Trade Like an O&#x27;Neil Disciple — Gil Morales &amp; Dr. Chris Kacher (score 3.35) — library match (unverified)</li>
+      <li>Trader Vic: Methods of a Wall Street Master — Victor Sperandeo (score 3.35)</li>
+      <li>Trading Mindwheel — Michael Lamothe (score 3.35)</li>
+      <li>Trading Psychology — Mark Douglas (score 3.35)</li>
+      <li>Trading Systems &amp; Methods — Perry J. Kaufman (score 3.35) — library match (unverified)</li>
+      <li>Short Term Trading Strategies That Work — Connors &amp; Alvarez (score 2.54) — library match (unverified)</li>
+      <li>Dave Landry On Swing Trading — Dave Landry (score 2.05)</li>
+      <li>Trading Psychology 2.0 — Brett Steenbarger (score 1.89) — library match (unverified)</li>
+      <li>The Psychology of Trading — Brett Steenbarger (score 1.6) — library match (unverified)</li>
+      <li>Lessons from Monster Stocks 2020-21 — @monsterstocks1 (score 1.47)</li>
+      <li>Stock Market Technique — Richard Wyckoff (score 0.85)</li>
+      <li>The Daily Stoic —  (score 0.85)</li>
+      <li>The Little Book of Market Wizards — Jack Schwager (score 0.85) — library match (unverified)</li>
+      <li>The Trading Tribe — Ed Seykota (score 0.85)</li>
+    </ul>
+    <h2>trading-adjacent (3)</h2>
+    <ul class="strengths">
+      <li>Advances in Financial Machine Learning — Marcos Lopez De Prado (score 3.35) — library match (unverified)</li>
+      <li>The Mental Game of Poker — Jared Tendler (score 0.85) — library match (unverified)</li>
+      <li>The Mental Game of Poker 2 — Jared Tendler (score 0.85)</li>
+    </ul>
+    <h2>unclassified (4)</h2>
+    <ul class="strengths">
+      <li>Anchored VWAP — Brian Shannon (score 3.35)</li>
+      <li>Short Selling with the O&#x27;Neil Disciples — Gil Morales and Chris Kacher (score 3.35)</li>
+      <li>Mastering the Market Cycle — Howard Marks (score 0.85) — library match (unverified)</li>
+      <li>Meditations — Marcus Aurelius (score 0.85)</li>
+    </ul>
+    <nav class="page-nav" aria-label="More pages">
+      <a href="#home">Home</a>
+      <a href="#blog">Blog</a>
+      <a href="#learnings">Learnings</a>
+      <a href="#quotes">Quotes</a>
+    </nav>
+  </div>
+
+</main>
+<footer>
+  <p>nishant.trade</p>
+</footer>
+
+<script>
+(function () {
+  var PAGES = {
+    "": "home",
+    "home": "home",
+    "blog": "blog",
+    "learnings": "learnings",
+    "quotes": "quotes",
+    "trading-books": "trading-books"
+  };
+  var PAGE_TITLES = {
+    "home": "Nishant — Quantitative Trader",
+    "blog": "Blog — Nishant",
+    "learnings": "Learnings — Nishant",
+    "quotes": "Quotes — Nishant",
+    "trading-books": "Trading Books — Nishant"
+  };
+  var HOME_ANCHORS = {
+    "background": "background-heading",
+    "strengths": "strengths-heading",
+    "contact": "contact-heading"
+  };
+  var views = {};
+  var nodes = document.querySelectorAll("[data-view]");
+  for (var i = 0; i < nodes.length; i++) {
+    views[nodes[i].getAttribute("data-view")] = nodes[i];
+  }
+  var current = null;
+
+  function focusTitle(page) {
+    var title = document.querySelector("#view-" + page + " h1");
+    if (!title) return;
+    try {
+      title.focus({ preventScroll: true });
+    } catch (e) {
+      /* Older Safari does not accept focus options */
+      title.focus();
+    }
+  }
+
+  function route(focus) {
+    var raw = window.location.hash.replace(/^#\/?/, "").replace(/\/$/, "").toLowerCase();
+    var page = PAGES.hasOwnProperty(raw) ? PAGES[raw] : null;
+    var anchorId = HOME_ANCHORS.hasOwnProperty(raw) ? HOME_ANCHORS[raw] : null;
+
+    if (anchorId !== null) {
+      page = "home";
+    }
+    if (page === null) {
+      page = "home";
+    }
+
+    var changed = page !== current;
+    current = page;
+
+    for (var key in views) {
+      if (Object.prototype.hasOwnProperty.call(views, key)) {
+        views[key].hidden = key !== page;
+      }
+    }
+
+    if (PAGE_TITLES[page]) {
+      document.title = PAGE_TITLES[page];
+    }
+
+    // Mark current page in the home navigation
+    var navLinks = document.querySelectorAll(".site-nav a");
+    for (var j = 0; j < navLinks.length; j++) {
+      var href = navLinks[j].getAttribute("href").replace(/^#\/?/, "").toLowerCase();
+      if (PAGES.hasOwnProperty(href) && PAGES[href] === page && page !== "home") {
+        navLinks[j].setAttribute("aria-current", "page");
+      } else {
+        navLinks[j].removeAttribute("aria-current");
+      }
+    }
+
+    if (anchorId) {
+      var target = document.getElementById(anchorId);
+      if (target) {
+        // Defer so the now-visible home view is laid out first
+        setTimeout(function () {
+          try {
+            target.scrollIntoView({ block: "start" });
+          } catch (e) {
+            target.scrollIntoView();
+          }
+        }, 0);
+        if (focus) focusTitle(page);
+      }
+      return;
+    }
+
+    if (changed) {
+      window.scrollTo(0, 0);
+      if (focus) focusTitle(page);
+    }
+  }
+
+  window.addEventListener("hashchange", function () { route(true); });
+  route(false);
+})();
+</script>
+</body>
+</html>
